@@ -1,0 +1,3 @@
+.vagrant
+chef-repo/Berksfile.lock
+chef-repo/cookbooks
