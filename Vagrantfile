@@ -9,9 +9,18 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :shell do |s|
     s.inline = <<-EOS
+      export DEBIAN_FRONTEND=noninteractive
       sudo apt-get update
-      sudo apt-get upgrade -y
-      sudo apt-get install git make curl zlib1g-dev libyaml-dev -y
+
+      # Upgrade grub-pc
+      sudo apt-get install -y debconf-utils
+      printf "%s\t%s\t%s\n" grub-pc grub-pc/install_devices multiselect | sudo debconf-set-selections
+      printf "%s\t%s\t%s\t%s\n" grub-pc grub-pc/install_devices_empty boolean true | sudo debconf-set-selections
+      sudo apt-get -o Dpkg::Options::="--force-confnew" --force-yes -fuy install grub-pc
+
+      # Upgrade and install
+      sudo apt-get -y upgrade
+      sudo apt-get -y install git make curl zlib1g-dev libyaml-dev
 
       # Install Ruby 1.9.3
       cd /tmp
@@ -21,14 +30,14 @@ Vagrant.configure("2") do |config|
       ./configure --prefix=/opt/ruby
       make
       sudo make install
-      export PATH=/opt/ruby/bin:%PATH
-      cd ..
-      rm -rf ruby-1.9.3-p392
-      rm ruby-1.9.3-p392.tar.gz
+      echo 'export PATH="/opt/ruby/bin:%PATH"' >> ~/.bashrc
+      source ~/.bashrc
 
+      # Install gem
       sudo gem update --system
       sudo gem install psych bundler berkshelf chef --no-ri --no-rdoc
 
+      # Chef
       cd /vagrant/chef-repo
       berks install --path cookbooks
       sudo chef-solo -c solo.rb -j nodes/localhost.json
