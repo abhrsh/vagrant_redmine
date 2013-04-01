@@ -101,6 +101,40 @@ template "/opt/redmine/config/unicorn.rb" do
   source "unicorn.rb.erb"
   owner "root"
   group "root"
+  mode "0755"
+  action :create
+end
+
+template "/etc/init.d/unicorn" do
+  source "service.unicorn.erb"
+  owner "root"
+  group "root"
   mode "0644"
   action :create
+end
+
+# Install nginx
+execute "Install nginx" do
+  command <<-EOS
+    apt-get install -y python-software-properties
+    add-apt-repository ppa:nginx/stable
+    apt-get update
+    apt-get install -y nginx
+  EOS
+  action :run
+end
+
+template "/etc/nginx/sites-available/redmine.conf" do
+  source "nginx.redmine.conf.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create
+end
+
+execute "Link nginx.redmine.conf" do
+  command <<-EOS
+    ln -s /etc/nginx/sites-available/redmine.conf /etc/nginx/sites-enabled/redmine.conf
+  EOS
+  action :run
 end

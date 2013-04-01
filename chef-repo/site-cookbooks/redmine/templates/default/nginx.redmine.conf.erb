@@ -1,0 +1,24 @@
+upstream redmine{
+  server unix:/opt/redmine/tmp/unicorn.sock;
+}
+ 
+server {
+  listen 80;
+  server_name localhost;
+ 
+  root /opt/redmine/public;
+
+  access_log /var/log/nginx_redmine_access.log;
+  error_log /var/log/nginx_redmine_error.log;
+ 
+  location / {
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+ 
+    if (!-f $request_filename){
+      proxy_pass http://redmine;
+    }
+  }
+}
