@@ -1,9 +1,8 @@
 #!/bin/sh
 
+sudo apt-get -y install zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev
 sudo apt-get remove -y ruby1.8 ruby1.9 rubygems
 sudo apt-get install -y ruby1.9.3
-
-#sudo apt-get -y install curl make zlib1g-dev libyaml-dev
 
 # Install Ruby 1.9.3
 #cd /tmp

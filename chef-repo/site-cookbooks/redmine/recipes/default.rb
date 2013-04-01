@@ -17,11 +17,12 @@ end
 execute "Install Redmine" do
   cwd "/opt/redmine"
   command <<-EOS
-    sudo gem install rake mysql2 --no-ri --no-rdoc
+    gem install rake --no-ri --no-rdoc
+    gem install mysql2 --no-ri --no-rdoc
     bundle install --path vendor/bundle --without development test rmagick postgresql sqlite
-    sudo mkdir public/plugin_assets
-    sudo chown -R vagrant:vagrant files log tmp public/plugin_assets
-    sudo chmod -R 755 files log tmp public/plugin_assets
+    mkdir public/plugin_assets
+    chown -R vagrant:vagrant files log tmp public/plugin_assets
+    chmod -R 755 files log tmp public/plugin_assets
   EOS
   creates "/opt/redmine/vendor"
 end
@@ -70,12 +71,36 @@ template "/opt/redmine/config/database.yml" do
 end
 
 # Setup Redmine
-execute "Generate secret token" do
+execute "Initialize database" do
   cwd "/opt/redmine"
   command <<-EOS
     rake generate_secret_token
     RAILS_ENV=production rake db:migrate
+    RAILS_ENV=production REDMINE_LANG=ja rake redmine:load_default_data
   EOS
   action :run
 end
 
+# Setup unicorn
+template "/opt/redmine/Gemfile.local" do
+  source "Gemfile.local.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create
+end
+
+execute "Install unicorn" do
+  cwd "/opt/redmine"
+  command <<-EOS
+    bundle install --path vendor/bundle --without development test rmagick postgresql sqlite
+  EOS
+end
+
+template "/opt/redmine/config/unicorn.rb" do
+  source "unicorn.rb.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  action :create
+end

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sudo apt-get install -y git-core curl make
+sudo apt-get install -y git curl make
 sudo gem install bundler berkshelf chef --no-ri --no-rdoc
 
 # Chef
