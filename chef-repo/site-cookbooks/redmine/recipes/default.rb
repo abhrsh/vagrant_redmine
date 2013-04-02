@@ -133,8 +133,8 @@ end
 
 execute "Start nginx" do
   command <<-EOS
-    ln -s /etc/nginx/sites-available/redmine.conf /etc/nginx/sites-enabled/redmine.conf
-    rm /etc/nginx/sites-enable/default
+    ln -s /etc/nginx/sites-available/redmine /etc/nginx/sites-enabled/redmine
+    rm /etc/nginx/sites-enabled/default
     service nginx restart
   EOS
   action :run
