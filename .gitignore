@@ -1,5 +1,9 @@
-.vagrant
-chef-repo/Berksfile.lock
-chef-repo/cookbooks
+
 *.pid
 *.out
+*.log
+
+.vagrant
+chef-repo/cookbooks
+
+chef-repo/Berksfile.lock

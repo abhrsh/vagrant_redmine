@@ -6,8 +6,6 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/ga
 NAME=unicorn
 ENVIROMENT=production
  
-# SCRIPT_DIR=`dirname $0`
-# ROOT_DIR=$(cd "${SCRIPT_DIR}/../../"; pwd)
 ROOT_DIR="/opt/redmine"
  
 PID="${ROOT_DIR}/tmp/pids/unicorn.pid"
@@ -59,8 +57,12 @@ reload()
  
 restart()
 {
-    stop
-    start
+  if [ -e $PID ]; then
+    echo "stop $NAME";
+    kill -QUIT `cat ${PID}`
+    rm -f $PID
+  fi
+  start
 }
  
 case "$1" in
