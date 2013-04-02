@@ -76,17 +76,6 @@ template "/opt/redmine/config/database.yml" do
   action :create
 end
 
-# Setup Redmine
-execute "Initialize database" do
-  cwd "/opt/redmine"
-  command <<-EOS
-    rake generate_secret_token
-    RAILS_ENV=production rake db:migrate
-    RAILS_ENV=production REDMINE_LANG=ja rake redmine:load_default_data
-  EOS
-  action :run
-end
-
 # Setup unicorn
 template "/opt/redmine/Gemfile.local" do
   source "Gemfile.local.erb"
@@ -123,13 +112,6 @@ package "sysv-rc-conf" do
   action :install
 end
 
-execute "Start unicorn" do
-  command <<-EOS
-    sysv-rc-conf unicorn on
-    /etc/init.d/unicorn restart
-  EOS
-end
-
 # Install nginx
 execute "Install nginx" do
   command <<-EOS
@@ -156,4 +138,22 @@ execute "Start nginx" do
     service nginx restart
   EOS
   action :run
+end
+
+# Initialize database Redmine
+execute "Initialize database" do
+  cwd "/opt/redmine"
+  command <<-EOS
+    rake generate_secret_token
+    RAILS_ENV=production rake db:migrate
+    RAILS_ENV=production REDMINE_LANG=ja rake redmine:load_default_data
+  EOS
+  action :run
+end
+
+execute "Start unicorn" do
+  command <<-EOS
+    sysv-rc-conf unicorn on
+    /etc/init.d/unicorn restart
+  EOS
 end
