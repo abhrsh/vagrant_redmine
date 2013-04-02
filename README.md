@@ -22,8 +22,7 @@ vagrant-up.bat (or vagrant-up.sh) を実行すると仮想マシンを起動す�
 * nginx
 
 ## TODO
-* chefのcookbook
-** cookbook、recipe分割
-** パラメータ化
-** 再実行不要の判定を入れる
+* cookbook、recipe分割
+* recipe パラメータ化
+* recipe 再実行不要の判定を入れる
 * メール送信設定
