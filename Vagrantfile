@@ -7,16 +7,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
   config.vm.network :public_network
 
-  config.vm.provision :shell do |s|
-    s.inline = <<-EOS
-      sh /vagrant/provision/upgrade-package.sh
-      sh /vagrant/provision/install-ruby.sh
-      sh /vagrant/provision/install-chef.sh
-
-      cd /vagrant/chef-repo
-      sudo chef-solo -c solo.rb -j nodes/localhost.json
-    EOS
-  end
+  config.vm.provision :shell, :path => "provision/exec-all.sh"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
