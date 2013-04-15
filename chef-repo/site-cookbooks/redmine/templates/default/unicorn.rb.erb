@@ -1,10 +1,10 @@
 worker_processes 2
 #working_directory /opt/redmine
  
-listen File.expand_path("tmp/unicorn.sock", ENV['RAILS_ROOT'])
+listen File.expand_path("tmp/sockets/unicorn.sock", ENV['RAILS_ROOT'])
 listen 5001, :tcp_nopush => true
 
-pid File.expand_path("tmp/unicorn.pid", ENV['RAILS_ROOT'])
+pid File.expand_path("tmp/pids/unicorn.pid", ENV['RAILS_ROOT'])
  
 timeout 60
  
