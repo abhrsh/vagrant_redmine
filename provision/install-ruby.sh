@@ -1,19 +1,31 @@
 #!/bin/sh
 
-sudo apt-get -y install zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev
-sudo apt-get remove -y ruby1.8 ruby1.9 rubygems
-sudo apt-get install -y ruby1.9.3
+# Install Ruby 1.9.3 rbenv
+which rbenv > /dev/null
+if [ $? -ne 0 ]; then
+  apt-get -y install curl make git build-essential zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev
+  apt-get remove -y ruby1.8 ruby1.9 rubygems
 
-# Install Ruby 1.9.3
-#cd /tmp
-#wget http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p392.tar.gz
-#tar xzf ruby-1.9.3-p392.tar.gz
-#cd ruby-1.9.3-p392
-#./configure --prefix=/opt/ruby
-#make
-#sudo make install
-#export PATH=/opt/ruby/bin:$PATH
+  export RBENV_ROOT=/opt/rbenv
+  git clone git://github.com/sstephenson/rbenv.git $RBENV_ROOT
+  chgrp -R adm $RBENV_ROOT
+  chmod -R g+rwxXs $RBENV_ROOT
 
-# Install gem
-#sudo gem update --system
-#sudo gem install psych --no-ri --no-rdoc
+  mkdir -p $RBENV_ROOT/plugins
+  git clone git://github.com/sstephenson/ruby-build.git $RBENV_ROOT/plugins/ruby-build
+
+  RBENV_SHELL=/etc/profile.d/rbenv.sh
+  echo 'export RBENV_ROOT="/opt/rbenv"'       > $RBENV_SHELL
+  echo 'export PATH="$RBENV_ROOT/bin:$PATH"' >> $RBENV_SHELL
+  echo 'eval "$(rbenv init -)"'              >> $RBENV_SHELL
+
+  export PATH="$RBENV_ROOT/shims:$RBENV_ROOT/bin:$PATH"
+  rbenv install 1.9.3-p392
+  rbenv rehash
+  rbenv global  1.9.3-p392
+
+  gem update --no-ri --no-rdoc
+  gem install rbenv-rehash --no-ri --no-rdoc
+  rbenv rehash
+  gem install bundler chef berkshelf --no-ri --no-rdoc
+fi
