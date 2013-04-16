@@ -7,27 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-
-# Install MySQL Client
-%w{mysql-client libmysqlclient-dev}.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
-
-# Install MySQL Server
-%w{mysql-server}.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
-
-%w{rake mysql2}.each do |pkg|
-  gem_package pkg do
-    options("--no-ri --no-rdoc")
-    action :install
-  end
-end
+include_recipe "mysql"
 
 # Install Redmine
 git "/opt/redmine" do
@@ -108,10 +88,6 @@ template "/etc/init.d/unicorn" do
   action :create
 end
 
-package "sysv-rc-conf" do
-  action :install
-end
-
 # Install nginx
 execute "Install nginx" do
   command <<-EOS
@@ -149,6 +125,10 @@ execute "Initialize database" do
     RAILS_ENV=production REDMINE_LANG=ja rake redmine:load_default_data
   EOS
   action :run
+end
+
+package "sysv-rc-conf" do
+  action :install
 end
 
 execute "Start unicorn" do
