@@ -9,4 +9,5 @@ CHEF_REPO=$ROOT/chef-repo
 
 cd $CHEF_REPO
 berks install --path cookbooks
-chef-solo -c solo.rb -j nodes/localhost.json
+chef-solo -c solo.rb -j nodes/base.json
+#chef-solo -c solo.rb -j nodes/project-server.json
