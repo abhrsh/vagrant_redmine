@@ -29,3 +29,9 @@ end
     action :install
   end
 end
+
+execute "Assign MySQL root password" do
+  command "/usr/bin/mysqladmin -u root password pass"
+  action :run
+  only_if "/usr/bin/mysql -u root -e 'show databases;'"
+end
