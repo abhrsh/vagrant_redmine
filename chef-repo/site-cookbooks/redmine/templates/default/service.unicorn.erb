@@ -62,6 +62,18 @@ restart()
   fi
   start
 }
+
+status()
+{
+  if [ -e $PID ]; then
+    echo "$NAME is running";
+    exit 0;
+  fi
+  if [ ! -e $PID ]; then
+    echo "$NAME is not running";
+    exit 1;
+  fi
+}
  
 case "$1" in
   start)
@@ -79,7 +91,11 @@ case "$1" in
   restart)
     restart
     ;;
+  status)
+    status
+    ;;
   *)
-    echo "Syntax Error: unicorn [start|stop|force-stop|reload|restart]"
+    echo "Syntax Error: unicorn [start|stop|force-stop|reload|restart|status]"
+    exit 2
     ;;
 esac
