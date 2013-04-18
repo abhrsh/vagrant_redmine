@@ -12,8 +12,11 @@ CONF="${ROOT_DIR}/config/unicorn.rb"
 start()
 {
   if [ -e $PID ]; then
-    echo "$NAME already started";
-    exit 1;
+    ps -p `cat ${PID}` > /dev/null
+    if [ $? -eq 0 ]; then
+      echo "$NAME already started";
+      exit 1;
+    fi
   fi
   echo "start $NAME";
   cd $ROOT_DIR
