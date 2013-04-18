@@ -8,10 +8,10 @@ Vagrantを使って仮想マシンにRedmineをセットアップ
 * VirtualBox 4.2.x https://www.virtualbox.org/wiki/Downloads
 
 ## 実行方法
-vagrant-up.bat (or vagrant-up.sh) を実行すると仮想マシンを起動する。
-初回起動時にセットアップが自動実行。
+setup.bat (or setup.sh) を実行すると仮想マシンを起動してください。
+初回起動時にセットアップが自動実行します。
 
-仮想マシンを停止するには vagrant-halt.bat (or vagrant-halt.sh) を実行する。
+セットアップ完了後の起動/停止はvagrantのコマンドかVirtualBoxからできます。
 
 ## セットアップされる環境
 * Ubuntu 12.04
@@ -24,5 +24,4 @@ vagrant-up.bat (or vagrant-up.sh) を実行すると仮想マシンを起動す�
 ## TODO
 * cookbook、recipe分割
 * recipe パラメータ化
-* recipe 再実行不要の判定を入れる
 * メール送信設定
