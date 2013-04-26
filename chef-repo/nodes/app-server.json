@@ -1,0 +1,6 @@
+{
+  "run_list":[
+    "recipe[tomcat::version5.5]",
+    "recipe[mysql]"
+  ]
+}
